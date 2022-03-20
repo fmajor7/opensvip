@@ -9,6 +9,8 @@ namespace Plugin.SynthV
 {
     public class SynthVDecoder
     {
+        public BreathOptions BreathOptions { get; set; } = BreathOptions.None;
+
         private int FirstBarTick;
 
         private float FirstBPM;
@@ -107,7 +109,30 @@ namespace Plugin.SynthV
         private List<Note> DecodeNoteList(List<SVNote> svNotes)
         {
             // TODO: decode phones
-            return svNotes.Select(DecodeNote).ToList();
+            var query = svNotes.Select(DecodeNote);
+            switch (BreathOptions)
+            {
+                case BreathOptions.Remove:
+                    // filter out breath notes
+                    query = query.Where((data, index) => {
+                        bool isBreath = false;
+                        if (data.Pronunciation != null)
+                        {
+                            isBreath = Regex.IsMatch(data.Pronunciation, @"^(\.\s*)?(br|brl?[1-9])\s*$");
+                        }
+                        return !isBreath;
+                    });
+                    break;
+                case BreathOptions.Convert:
+                    // TODO: convert breath notes into "V" headtag of corresponding notes
+                    break;
+                case BreathOptions.None:
+                    // treat as regular notes
+                    break;
+                default:
+                    break;
+            }
+            return query.ToList();
         }
 
         private Params DecodeParams(SVParams svParams)

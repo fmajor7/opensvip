@@ -24,5 +24,13 @@
                 <Choice Name="音高无参处保留" Tag="hybrid"/>
             </EnumChoices>
         </Option>
+		<Option Name="breath" Type="enum" Default="none">
+			<Notes>换气音处理方式</Notes>
+			<EnumChoices>
+				<Choice Name="作为普通音符处理" Tag="none"/>
+				<Choice Name="去除所有换气音" Tag="remove"/>
+				<Choice Name="转换成目标格式支持的换气音" Tag="convert"/>
+			</EnumChoices>
+		</Option>
     </OutputOptions>
 </Plugin>

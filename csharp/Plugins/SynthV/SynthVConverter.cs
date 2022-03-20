@@ -17,7 +17,10 @@ namespace SynthV.Stream
             var svProject = JsonConvert.DeserializeObject<SVProject>(reader.ReadToEnd());
             stream.Close();
             reader.Close();
-            return new SynthVDecoder().DecodeProject(svProject);
+            return new SynthVDecoder
+            {
+                BreathOptions = options.GetOptionAsEnum("breath", BreathOptions.None)
+            }.DecodeProject(svProject);
         }
 
         public void Save(string path, Project project, ConverterOptions options)
